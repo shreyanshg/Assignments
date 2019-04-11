@@ -1,0 +1,28 @@
+*.class
+*.log
+*.crc
+
+# SBT Ignore Rules
+.cache
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+**/_SUCCESS
+**/_metadata
+**/_common_metadata
+
+# IntelliJ IDE Specific Ignore Rules
+.idea/
+project/target/
+
+# Scala IDE Specific Ignore Rules
+*.scala_dependencies
+*.worksheet
+
+# Mac OSX Specific
+*.DS_Store
