@@ -22,9 +22,9 @@ class BinaryTree {
   }
 
   def printGivenLevel(node: Node, level: Int, ltr: Boolean): Unit = {
-    if (node == null) {
-      Unit
-    }
+//    if (node == null) {
+//      Unit
+//    }
     if (level == 1) {
       println(node.data + " ")
     } else if (level > 1) {
@@ -64,7 +64,7 @@ class BinaryTree {
 }
 object BinaryTree{
   def main(args: Array[String]): Unit = {
-    var tree = new BinaryTree
+    val tree = new BinaryTree
     tree.root = Node("1")
     tree.root.left = Node("2")
     tree.root.right = Node("3")
