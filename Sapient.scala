@@ -1,5 +1,8 @@
 package spark
 
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
@@ -30,8 +33,17 @@ class Sapient {
 
 		val win = Window.partitionBy("user_id").orderBy("click_time")
 
-		val df1 = df.withColumn("ts_diff", unix_timestamp($"click_time") - unix_timestamp(lag("click_time", 1).over(win))).
-			withColumn("ts_diff", when($"ts_diff".isNull || $"ts_diff" > t1, 0L).otherwise($"ts_diff"))
+		val convertTimeUDF = udf{(ts: String) =>
+			val inputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+			val outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+			val date = inputFormatter.parse(ts)
+			val formattedDate = outputFormatter.format(date)
+			formattedDate
+		}
+	
+		val df1 = df.withColumn("click_time", convertTimeUDF($"click_time"))
+			.withColumn("ts_diff", unix_timestamp($"click_time") - unix_timestamp(lag("click_time", 1).over(win)))
+			.withColumn("ts_diff", when($"ts_diff".isNull || $"ts_diff" > t1, 0L).otherwise($"ts_diff"))
 
 
 		val getSessionIdList = udf { (userId: String, clickTimeList: Seq[String], diffTSList: Seq[Long]) => {
