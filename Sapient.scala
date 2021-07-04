@@ -65,7 +65,7 @@ class Sapient {
 		val sessionperday=  finalDF.withColumn("datecolumn", col("timestamp").cast(DateType)).
 			withColumn("sessionperday", size(collect_set("usersessionid").over(Window.partitionBy("datecolumn"))))
 
-		val differ = df.withColumn("diff", col("normalizedTime") - lag(col("normalizedTime"), 1).over(win))
+		val differ = df.withColumn("diff", unix_timestamp($"click_time") - unix_timestamp(lag("click_time", 1).over(win)))
 
 		val  userinfoDF = differ.withColumn("datecolumn", col("timestamp").cast(DateType)).
 			withColumn("usertimeperday", sum("diff").over(Window.partitionBy("datecolumn", "userid"))).
