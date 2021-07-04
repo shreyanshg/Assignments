@@ -54,7 +54,7 @@ class Sapient {
 		val groupDF = df1.groupBy("user_id").agg(
 			collect_list("click_time").as("click_time_list"),
 			collect_list("ts_diff").as("ts_diff_list")
-		).withColumn("session_id_list", getSessionIdList(col("user_id"), col("click_time_list"), col("ts_diff_list")))
+		)
 
 		val explodedDF = groupDF.withColumn("session_id",
 			explode(getSessionIdList()(col("user_id"), col("click_time_list"), col("ts_diff_list"))))
